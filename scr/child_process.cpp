@@ -3,28 +3,14 @@
 #include <string>
 #include <fstream>
 #include <fcntl.h>
-#include <cmath>
+#include "prime.cpp"
 
 using namespace std;
 
-bool isPrime(int number) {
-    if (number < 2) {
-        return false;
-    }
-
-    for (int i = 2; i <= sqrt(number); i++) {
-        if (number % i == 0) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 int main(int argc, char* argv[]){
     char smb;
-    int number=0,sgn = 1,ind = 0;
-    char buff[7];
+    int number=0,sgn = 1,ind = 0,len_lst_number = 0;
+    char buff[256];
 
     if (read(STDIN_FILENO, &smb, 1) == -1){
         return -1;
@@ -36,23 +22,24 @@ int main(int argc, char* argv[]){
             if(smb == '-'){
                 sgn = -1;
             }
+            len_lst_number++;
             number =  (number*10) + (smb-'0');
             read(STDIN_FILENO, &smb, 1);
         }
-        number*=sgn;
-        if(isPrime(number) or number<=0){
-            break;
+        else{
+            number*=sgn;
+            if(isPrime(number) or number<=0){
+                break;
+            }
+            number = 0;
+            sgn = 1;
+            len_lst_number = 0;
+            read(STDIN_FILENO, &smb, 1);
         }
-        number = 0;
-        sgn = 1;
-        read(STDIN_FILENO, &smb, 1);
     }
     buff[ind] = '\n';
-    ind++;
-    for(int i=0;i<ind;i++){
+    for(int i=0;i<ind-len_lst_number-1;i++){
         write(STDOUT_FILENO,&buff[i],1);
     }
-    perror("end child\n");
-    exit(1);
     return 0;
 }

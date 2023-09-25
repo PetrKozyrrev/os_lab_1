@@ -70,6 +70,7 @@ int main() {
         while( (read(pipe_fd[0], &buff, 1) > 0)){
             write(STDOUT_FILENO,&buff,1);
         }   
+        write(STDOUT_FILENO,"\n",1);
         close(pipe_fd[0]);
         wait(NULL);
         exit(EXIT_SUCCESS);
