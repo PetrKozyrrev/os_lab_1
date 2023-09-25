@@ -23,13 +23,16 @@ bool isPrime(int number) {
 
 int main(int argc, char* argv[]){
     char smb;
-    int number=0,sgn = 1;
+    int number=0,sgn = 1,ind = 0;
+    char buff[7];
 
     if (read(STDIN_FILENO, &smb, 1) == -1){
         return -1;
     }
-    while(smb!=' '){
-        while (smb != '\n'){
+    while (smb != '\n'){
+        buff[ind] = smb;
+        ++ind;
+        if(smb != ' '){ 
             if(smb == '-'){
                 sgn = -1;
             }
@@ -38,14 +41,18 @@ int main(int argc, char* argv[]){
         }
         number*=sgn;
         if(isPrime(number) or number<=0){
-            exit(-1);
-        }
-        else{
-            write(STDOUT_FILENO,&number,sizeof(int));
+            break;
         }
         number = 0;
         sgn = 1;
         read(STDIN_FILENO, &smb, 1);
     }
+    buff[ind] = '\n';
+    ind++;
+    for(int i=0;i<ind;i++){
+        write(STDOUT_FILENO,&buff[i],1);
+    }
+    perror("end child\n");
+    exit(1);
     return 0;
 }
