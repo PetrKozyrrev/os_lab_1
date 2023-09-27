@@ -3,30 +3,28 @@
 #include <string>
 #include <fstream>
 #include <fcntl.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-
-using namespace std;
 
 int main() {
 
     const char* CHILD_PATH = "/home/petrkozyrev/osi/os_lab_1/build/child";
-    string name ="/home/petrkozyrev/osi/os_lab_1/test/";
+    std::string name ="/home/petrkozyrev/osi/os_lab_1/test/";
+    
     char smb;
     int ind = 0;
 
-    if(read(STDIN_FILENO, &smb, 1) == -1){
+    if( read(STDIN_FILENO, &smb, 1) == -1){
         perror("Reading error\n");
         exit(1);
     }
 
-    while(smb != '\n'){
+    while( smb != '\n'){
         name += smb;
-        if (read(STDIN_FILENO, &smb, 1) == -1){
+        if ( read(STDIN_FILENO, &smb, 1) == -1){
             perror("Reading error\n");
             exit(1);
         }
     }
+
     const char* file_name = name.c_str();
     
     int pipe_fd[2];
@@ -47,14 +45,14 @@ int main() {
         close(pipe_fd[0]);
         int input_file = open(file_name,O_RDONLY);
 
-        if(input_file == -1){
+        if( input_file == -1){
             perror("Cant open file\n");
             exit(1);
         }
 
         dup2(input_file,STDIN_FILENO);
         
-        if(dup2(pipe_fd[1],STDOUT_FILENO) == -1){
+        if( dup2(pipe_fd[1],STDOUT_FILENO) == -1){
             perror("Cant dup2\n");
             exit(1);
         }
@@ -72,9 +70,7 @@ int main() {
         }   
         write(STDOUT_FILENO,"\n",1);
         close(pipe_fd[0]);
-        wait(NULL);
         exit(EXIT_SUCCESS);
     }
-    
     return 0;
 }
