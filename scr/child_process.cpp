@@ -12,7 +12,7 @@ int main(int argc, char* argv[]){
     int number=0,sgn = 1,ind = 0,len_lst_number = 0;
     
     if (read(STDIN_FILENO, &smb, 1) == -1){
-        return -1;
+        return 1;
     }
     while( smb != ' '){
         buff[ind] = smb;
